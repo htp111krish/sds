@@ -1,0 +1,5 @@
+# Auto commit watcher state file
+.commit_state.json
+
+# Test files
+testfile.txt
