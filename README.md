@@ -7,7 +7,7 @@ A collection of PowerShell scripts to create Git commits with custom past dates 
 | File | Description |
 |------|-------------|
 | `make_commit.ps1` | **Manual** - Create single commits with custom dates |
-| `auto_commit_watcher.ps1` | **Automated** - Watch for changes and auto-commit with date ranges |
+| `auto_commit_wat   cher.ps1` | **Automated** - Watch for changes and auto-commit with date ranges |
 | `start_watcher.ps1` | **Helper** - Interactive setup for the auto watcher |
 | `HOW_TO_USE_IN_NEW_PROJECT.md` | Quick start guide for any project |
 | `AUTO_COMMIT_GUIDE.md` | Complete documentation for auto watcher |
