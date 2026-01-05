@@ -102,14 +102,16 @@ while ($currentDate -le $endDateTime) {
             Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Changes detected! Staging files..." -ForegroundColor Yellow
             git add . 2>&1 | Out-Null
             
-            # Set environment variables for the date
-            $env:GIT_AUTHOR_DATE = $fullDate
-            $env:GIT_COMMITTER_DATE = $fullDate
-            
-            # Commit with custom message including commit number
+            # Commit with custom message including commit number and custom date
             $commitMessage = "$Message (commit $($commitsToday + 1)/$CommitsPerDay)"
             Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Committing with date: $fullDate" -ForegroundColor Cyan
-            git commit -m $commitMessage 2>&1 | Out-Null
+            
+            # Use git commit with --date flag for both author and committer dates
+            $env:GIT_AUTHOR_DATE = $fullDate
+            $env:GIT_COMMITTER_DATE = $fullDate
+            git commit -m $commitMessage --date="$fullDate" 2>&1 | Out-Null
+            Remove-Item Env:\GIT_AUTHOR_DATE -ErrorAction SilentlyContinue
+            Remove-Item Env:\GIT_COMMITTER_DATE -ErrorAction SilentlyContinue
             
             # Push to GitHub
             Write-Host "[$(Get-Date -Format 'HH:mm:ss')] Pushing to GitHub..." -ForegroundColor Cyan
@@ -118,10 +120,6 @@ while ($currentDate -le $endDateTime) {
             if ($LASTEXITCODE -eq 0) {
                 $commitsToday++
                 Write-Host "[$(Get-Date -Format 'HH:mm:ss')] SUCCESS! Commit $commitsToday/$CommitsPerDay pushed for $($currentDate.ToString('yyyy-MM-dd'))" -ForegroundColor Green
-                
-                # Clean up environment variables
-                Remove-Item Env:\GIT_AUTHOR_DATE -ErrorAction SilentlyContinue
-                Remove-Item Env:\GIT_COMMITTER_DATE -ErrorAction SilentlyContinue
                 
                 # Save state
                 Save-State -date $currentDate -commits $commitsToday
